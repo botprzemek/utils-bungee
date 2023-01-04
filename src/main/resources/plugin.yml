@@ -1,0 +1,6 @@
+name: bpBungeeUtils
+version: 0.1
+author: botprzemek
+website: https://www.github.com/botprzemek/bpBungeeUtils
+description: Bungeecord utils
+main: pl.botprzemek.bpBungeeUtils.BpBungeeUtils

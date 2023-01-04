@@ -1,0 +1,23 @@
+# Prefix for messages
+
+prefix: "<gradient:#ff80f6:#ffcc70>♦ <bold>bpLobby</bold> ♦</gradient>"
+
+# Reload message
+
+reload:
+  success: "%prefix% Configuration <gradient:#ff80f6:#ffcc70><bold>reloaded!</bold></gradient>"
+
+# Discord command
+
+discord:
+  success: "%prefix% Join our <gradient:#ff80f6:#ffcc70><bold><hover:show_text:'Join us!'><click:open_url:'https://dc.bhive.pl/'>discord!</click></hover></bold></gradient>"
+
+# Lobby command
+
+lobby:
+  success: "%prefix% You have been <gradient:#ff80f6:#ffcc70><bold>sent</bold></gradient> to the <gradient:#ff80f6:#ffcc70><bold>Lobby!</bold></gradient>"
+  connected: "%prefix% You are already <gradient:#ff80f6:#ffcc70><bold>conencted</bold></gradient> to the <gradient:#ff80f6:#ffcc70><bold>Lobby!</bold></gradient>"
+
+# Server list
+
+servers: ["lobby1", "lobby2"]
