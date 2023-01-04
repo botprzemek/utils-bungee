@@ -1,7 +1,7 @@
 package pl.botprzemek.bpBungeeUtils.Config;
 
 import pl.botprzemek.bpBungeeUtils.BpBungeeUtils;
-import pl.botprzemek.bpBungeeUtils.Utils.UtilsManager;
+import pl.botprzemek.bpBungeeUtils.UtilsManager;
 
 import java.util.ArrayList;
 import java.util.List;

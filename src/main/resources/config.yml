@@ -7,10 +7,27 @@ prefix: "<gradient:#ff80f6:#ffcc70>♦ <bold>bpLobby</bold> ♦</gradient>"
 reload:
   success: "%prefix% Configuration <gradient:#ff80f6:#ffcc70><bold>reloaded!</bold></gradient>"
 
+# Database config
+
+database:
+  host: "localhost"
+  port: 3306
+  name: "minecraft"
+  user: "user"
+  password: "Password123"
+
 # Discord command
 
 discord:
+  webhook-url: "https://discord.com/api/..."
   success: "%prefix% Join our <gradient:#ff80f6:#ffcc70><bold><hover:show_text:'Join us!'><click:open_url:'https://dc.bhive.pl/'>discord!</click></hover></bold></gradient>"
+  color: "#ff80f6"
+  join:
+    title: "%player_name% joined the server! (%online%/999)"
+    description: "%player_name% joined the server! (%online%/999)"
+  quit:
+    title: "%player_name% left the server! (%online%/999)"
+    description: "%player_name% left the server! (%online%/999)"
 
 # Lobby command
 

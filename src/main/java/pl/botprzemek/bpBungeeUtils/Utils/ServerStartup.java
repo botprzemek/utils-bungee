@@ -2,6 +2,7 @@ package pl.botprzemek.bpBungeeUtils.Utils;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import pl.botprzemek.bpBungeeUtils.UtilsManager;
 
 public class ServerStartup {
 

@@ -15,7 +15,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     compileOnly 'net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT'
-    //implementation 'net.kyori:adventure-api:4.12.0'
+    implementation 'com.zaxxer:HikariCP:2.3.2'
     implementation 'net.kyori:adventure-platform-bungeecord:4.2.0'
     implementation 'net.kyori:adventure-text-minimessage:4.12.0'
 }
@@ -26,9 +26,9 @@ jar {
 }
 
 shadowJar {
-    //relocate 'net.kyori:adventure-api:4.12.0', 'pl.botprzemek.adventure.api'
-    relocate 'net.kyori:adventure-platform-bungeecord:4.2.0', 'pl.botprzemek.adventure.bungee'
-    relocate 'net.kyori:adventure-text-minimessage:4.12.0', 'pl.botprzemek.adventure.minimessage'
+    relocate 'com.zaxxer:HikariCP:2.3.2', 'pl.botprzemek.bungee.hikaricp'
+    relocate 'net.kyori:adventure-platform-bungeecord:4.2.0', 'pl.botprzemek.bungee.adventure.bungee'
+    relocate 'net.kyori:adventure-text-minimessage:4.12.0', 'pl.botprzemek.bungee.adventure.minimessage'
     minimize()
 }
 
