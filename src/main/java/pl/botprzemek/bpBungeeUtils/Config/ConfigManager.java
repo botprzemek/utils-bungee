@@ -1,5 +1,6 @@
 package pl.botprzemek.bpBungeeUtils.Config;
 
+import net.md_5.bungee.api.ProxyServer;
 import pl.botprzemek.bpBungeeUtils.BpBungeeUtils;
 import pl.botprzemek.bpBungeeUtils.UtilsManager;
 
@@ -24,7 +25,7 @@ public class ConfigManager {
 
     public void loadConfigs() {
 
-        instance.getLogger().info("Loading configs...");
+        ProxyServer.getInstance().getLogger().info("Loading configs...");
 
         for (Config config : configs) {
 

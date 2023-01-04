@@ -1,29 +1,54 @@
 package pl.botprzemek.bpBungeeUtils.Codes;
 
+import pl.botprzemek.bpBungeeUtils.Utils.Database;
+
+import javax.sql.rowset.CachedRowSet;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class CodesManager {
 
-    private final String INSERT = "INSERT INTO user_codes VALUES(?,?)";
+    private HashMap<String, UUID> codes;
 
-    private final String SELECT = "SELECT code FROM user_codes WHERE used_by=?";
+    private final Database database;
 
-    private final String UPDATE = "UPDATE user_codes SET used_by=? WHERE code=?";
+    public CodesManager(Database database) {
 
-    private final String DELETE = "DELETE FROM user_codes WHERE code=?";
+        this.database = database;
 
-    private final HashMap<String, UUID> codes;
+        this.codes = new HashMap<>();
 
-    public CodesManager() {
-
-        this.codes = loadCodes();
+        loadCodes();
 
     }
 
-    public HashMap<String, UUID> loadCodes() {
+    public void loadCodes() {
 
-        return codes;
+        String SELECT_MULTIPLE = "SELECT code FROM user_codes WHERE used_by=null";
+
+        PreparedStatement preparedStatement = database.prepareStatement(SELECT_MULTIPLE);
+
+        CachedRowSet cachedRowSet = database.sendQuery(preparedStatement);
+
+        if (cachedRowSet == null) codes = new HashMap<>();
+
+        try {
+
+            while (cachedRowSet.next()) {
+
+                codes.put(cachedRowSet.getString("code"), null);
+
+            }
+
+        }
+
+        catch (SQLException error) {
+
+            error.printStackTrace();
+
+        }
 
     }
 
@@ -31,15 +56,39 @@ public class CodesManager {
 
         codes.put(code, null);
 
+        String INSERT = "INSERT INTO user_codes(code) VALUES(?)";
+
+        PreparedStatement preparedStatement = database.prepareStatement(INSERT, code);
+
+        database.executeQuery(preparedStatement);
+
+    }
+
+    public boolean validateCode(String code) {
+
+        return codes.containsKey(code);
+
     }
 
     public void updateCode(String code, UUID usedBy) {
+
+        String UPDATE = "UPDATE user_codes SET used_by=? WHERE code=?";
+
+        PreparedStatement preparedStatement = database.prepareStatement(UPDATE, String.valueOf(usedBy), code);
+
+        database.executeQuery(preparedStatement);
 
         codes.put(code, usedBy);
 
     }
 
     public void deleteCode(String code) {
+
+        String DELETE = "DELETE FROM user_codes WHERE code=?";
+
+        PreparedStatement preparedStatement = database.prepareStatement(DELETE, code);
+
+        database.executeQuery(preparedStatement);
 
         codes.remove(code);
 

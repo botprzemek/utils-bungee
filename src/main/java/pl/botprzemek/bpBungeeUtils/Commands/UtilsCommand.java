@@ -27,6 +27,8 @@ public class UtilsCommand extends Command {
 
         config.loadConfig();
 
+        utilsManager.getCodesManager().loadCodes();
+
         utilsManager.updateDiscordWebhook(config);
 
         sender.sendMessage(config.getStringSerializer().serializeStringFromPath("reload.success"));

@@ -1,6 +1,7 @@
 package pl.botprzemek.bpBungeeUtils;
 
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import pl.botprzemek.bpBungeeUtils.Codes.CodesManager;
 import pl.botprzemek.bpBungeeUtils.Commands.CommandManager;
 import pl.botprzemek.bpBungeeUtils.Config.Config;
 import pl.botprzemek.bpBungeeUtils.Config.ConfigManager;
@@ -19,6 +20,8 @@ public class UtilsManager {
 
     private DiscordWebhook discordWebhook;
 
+    private final CodesManager codesManager;
+
     public UtilsManager(BpBungeeUtils instance) {
 
         this.instance = instance;
@@ -30,6 +33,8 @@ public class UtilsManager {
         updateDiscordWebhook(configManager.getConfig());
 
         this.databaseConnection = new Database(configManager.getConfig().getConfiguration(), instance);
+
+        this.codesManager = new CodesManager(databaseConnection);
 
         BungeeAudiences.create(instance);
 
@@ -71,9 +76,9 @@ public class UtilsManager {
 
     }
 
-    public Database getDatabaseConnection() {
+    public CodesManager getCodesManager() {
 
-        return databaseConnection;
+        return codesManager;
 
     }
 

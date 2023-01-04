@@ -1,5 +1,6 @@
 package pl.botprzemek.bpBungeeUtils.Utils;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.config.Configuration;
@@ -24,18 +25,21 @@ public class Database {
 
     public Database(Configuration configuration, BpBungeeUtils instance) {
 
-        this.hikari = new HikariDataSource();
+        ProxyServer.getInstance().getLogger().info("Loading MySQL database...");
 
         this.instance = instance;
 
         Configuration config = configuration.getSection("database");
 
-        hikari.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-        hikari.addDataSourceProperty("serverName", config.getString("host"));
-        hikari.addDataSourceProperty("port", config.getString("port"));
-        hikari.addDataSourceProperty("databaseName", config.getString("database"));
-        hikari.addDataSourceProperty("user", config.getString("user"));
-        hikari.addDataSourceProperty("password", config.getString("password"));
+        HikariConfig hikariConfig = new HikariConfig();
+
+        String jdbcUrl = "jdbc:mysql://" + config.getString("host") + ":" + config.getInt("port") + "/" + config.getString("database");
+
+        hikariConfig.setJdbcUrl(jdbcUrl);
+        hikariConfig.setUsername(config.getString("user"));
+        hikariConfig.setPassword(config.getString("password"));
+
+        this.hikari = new HikariDataSource(hikariConfig);
 
         createTable();
 
@@ -43,7 +47,7 @@ public class Database {
 
     public void disconnectDatabase() {
 
-        hikari.shutdown();
+        hikari.close();
 
     }
 
@@ -53,7 +57,7 @@ public class Database {
 
             Connection connection = hikari.getConnection();
 
-            connection.createStatement().execute("create table if not exists user_codes(code_id int(6) not null, code varchar(24) not null, used_by varchar(36) default null null, constraint user_codes_pk primary key (code_id)); create index user_codes_code_index on user_codes (code); create index user_codes_used_by_index on user_codes (used_by);");
+            connection.createStatement().execute("create table if not exists user_codes(code_id int(6) not null auto_increment, code varchar(24) not null, used_by varchar(36) default null null, constraint user_codes_pk primary key (code_id))");
 
         }
 
@@ -62,6 +66,7 @@ public class Database {
             error.printStackTrace();
 
         }
+
     }
 
 
@@ -88,7 +93,7 @@ public class Database {
 
                     preparedStatement.getConnection().close();
 
-                    if (!cachedRowSet.next()) return cachedRowSet;
+                    return cachedRowSet;
 
                 }
 
@@ -119,13 +124,14 @@ public class Database {
     }
 
     public PreparedStatement prepareStatement(String query, String... args) {
+
         try {
 
             PreparedStatement preparedStatement = getConnection().prepareStatement(query);
 
             int x = 0;
 
-            if (!query.contains("?") && args.length == 0) return null;
+            if (!query.contains("?") && args.length == 0) return preparedStatement;
 
             for (String var : args) {
                 x++;
