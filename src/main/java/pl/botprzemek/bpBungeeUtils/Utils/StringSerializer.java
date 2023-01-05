@@ -27,4 +27,13 @@ public class StringSerializer {
 
     }
 
+    public BaseComponent serializeStringFromPath(String path, String placeholder) {
+
+        return BungeeComponentSerializer.get()
+                .serialize(mm.deserialize(config.getConfiguration().getString(path)
+                        .replace("%value%", placeholder)
+                        .replace("%prefix%", config.getConfiguration().getString("prefix"))))[0];
+
+    }
+
 }

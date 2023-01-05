@@ -1,22 +1,28 @@
 package pl.botprzemek.bpBungeeUtils.Codes;
 
-import pl.botprzemek.bpBungeeUtils.Utils.Database;
+import pl.botprzemek.bpBungeeUtils.BpBungeeUtils;
+import pl.botprzemek.bpBungeeUtils.Utils.MySQLDatabase;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class CodesManager {
 
+    private BpBungeeUtils instance;
+
     private HashMap<String, UUID> codes;
 
-    private final Database database;
+    private final MySQLDatabase mySQLDatabase;
 
-    public CodesManager(Database database) {
+    public CodesManager(MySQLDatabase mySQLDatabase, BpBungeeUtils instance) {
 
-        this.database = database;
+        this.instance = instance;
+
+        this.mySQLDatabase = mySQLDatabase;
 
         this.codes = new HashMap<>();
 
@@ -26,19 +32,21 @@ public class CodesManager {
 
     public void loadCodes() {
 
-        String SELECT_MULTIPLE = "SELECT code FROM user_codes WHERE used_by=null";
+        String SELECT_MULTIPLE = "SELECT code, used_by FROM user_codes";
 
-        PreparedStatement preparedStatement = database.prepareStatement(SELECT_MULTIPLE);
+        PreparedStatement preparedStatement = mySQLDatabase.prepareStatement(SELECT_MULTIPLE);
 
-        CachedRowSet cachedRowSet = database.sendQuery(preparedStatement);
-
-        if (cachedRowSet == null) codes = new HashMap<>();
+        CachedRowSet cachedRowSet = mySQLDatabase.sendQuery(preparedStatement);
 
         try {
 
             while (cachedRowSet.next()) {
 
-                codes.put(cachedRowSet.getString("code"), null);
+                String code = cachedRowSet.getString("code");
+
+                UUID playerUUID = (cachedRowSet.getString("used_by") != null) ? UUID.fromString(cachedRowSet.getString("used_by")) : null;
+
+                codes.put(code, playerUUID);
 
             }
 
@@ -54,19 +62,63 @@ public class CodesManager {
 
     public void addCode(String code) {
 
-        codes.put(code, null);
+        this.codes.put(code, null);
 
-        String INSERT = "INSERT INTO user_codes(code) VALUES(?)";
+        String INSERT = "INSERT INTO user_codes (code) VALUES (?)";
 
-        PreparedStatement preparedStatement = database.prepareStatement(INSERT, code);
+        PreparedStatement preparedStatement = mySQLDatabase.prepareStatement(INSERT, code);
 
-        database.executeQuery(preparedStatement);
+        mySQLDatabase.executeQuery(preparedStatement);
 
     }
 
-    public boolean validateCode(String code) {
+    public void addCodes(List<String> codes) {
 
-        return codes.containsKey(code);
+        for (String code : codes) this.codes.put(code, null);
+
+        String INSERT = "INSERT INTO user_codes (code) VALUES (?)";
+
+        PreparedStatement preparedStatement = mySQLDatabase.prepareStatements(INSERT, codes);
+
+        mySQLDatabase.executeBatch(preparedStatement);
+
+    }
+
+    public boolean validateCode(String providedCode) {
+
+        String SELECT = "SELECT code, used_by FROM user_codes WHERE code=?";
+
+        PreparedStatement preparedStatement = mySQLDatabase.prepareStatement(SELECT, providedCode);
+
+        CachedRowSet cachedRowSet = mySQLDatabase.sendQuery(preparedStatement);
+
+        try {
+
+            if (cachedRowSet.next()) {
+
+                String code = cachedRowSet.getString("code");
+
+                if (code == null) return false;
+
+                UUID playerUUID = (cachedRowSet.getString("used_by") != null) ? UUID.fromString(cachedRowSet.getString("used_by")) : null;
+
+                codes.put(code, playerUUID);
+
+                return codes.get(code) == null;
+
+            }
+
+        }
+
+        catch (SQLException error) {
+
+            error.printStackTrace();
+
+            return false;
+
+        }
+
+        return false;
 
     }
 
@@ -74,9 +126,9 @@ public class CodesManager {
 
         String UPDATE = "UPDATE user_codes SET used_by=? WHERE code=?";
 
-        PreparedStatement preparedStatement = database.prepareStatement(UPDATE, String.valueOf(usedBy), code);
+        PreparedStatement preparedStatement = mySQLDatabase.prepareStatement(UPDATE, String.valueOf(usedBy), code);
 
-        database.executeQuery(preparedStatement);
+        mySQLDatabase.executeQuery(preparedStatement);
 
         codes.put(code, usedBy);
 
@@ -86,9 +138,9 @@ public class CodesManager {
 
         String DELETE = "DELETE FROM user_codes WHERE code=?";
 
-        PreparedStatement preparedStatement = database.prepareStatement(DELETE, code);
+        PreparedStatement preparedStatement = mySQLDatabase.prepareStatement(DELETE, code);
 
-        database.executeQuery(preparedStatement);
+        mySQLDatabase.executeQuery(preparedStatement);
 
         codes.remove(code);
 

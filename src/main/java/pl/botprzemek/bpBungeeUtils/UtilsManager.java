@@ -6,8 +6,8 @@ import pl.botprzemek.bpBungeeUtils.Commands.CommandManager;
 import pl.botprzemek.bpBungeeUtils.Config.Config;
 import pl.botprzemek.bpBungeeUtils.Config.ConfigManager;
 import pl.botprzemek.bpBungeeUtils.Events.EventManager;
-import pl.botprzemek.bpBungeeUtils.Utils.Database;
 import pl.botprzemek.bpBungeeUtils.Utils.DiscordWebhook;
+import pl.botprzemek.bpBungeeUtils.Utils.MySQLDatabase;
 import pl.botprzemek.bpBungeeUtils.Utils.ServerStartup;
 
 public class UtilsManager {
@@ -16,7 +16,7 @@ public class UtilsManager {
 
     private final ConfigManager configManager;
 
-    private final Database databaseConnection;
+    private final MySQLDatabase mySQLDatabaseConnection;
 
     private DiscordWebhook discordWebhook;
 
@@ -32,9 +32,9 @@ public class UtilsManager {
 
         updateDiscordWebhook(configManager.getConfig());
 
-        this.databaseConnection = new Database(configManager.getConfig().getConfiguration(), instance);
+        this.mySQLDatabaseConnection = new MySQLDatabase(configManager.getConfig().getConfiguration());
 
-        this.codesManager = new CodesManager(databaseConnection);
+        this.codesManager = new CodesManager(mySQLDatabaseConnection, instance);
 
         BungeeAudiences.create(instance);
 
@@ -48,7 +48,7 @@ public class UtilsManager {
 
     public void cleanUp() {
 
-        databaseConnection.disconnectDatabase();
+        mySQLDatabaseConnection.disconnectDatabase();
 
     }
 

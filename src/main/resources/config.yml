@@ -16,6 +16,16 @@ database:
   user: "user"
   password: "Password123"
 
+# Codes command
+
+codes:
+  success: "%prefix% Code redeemed <gradient:#ff80f6:#ffcc70><bold>successfully!</bold></gradient>"
+  invalid: "%prefix% Code you provided, is <gradient:#ff80f6:#ffcc70><bold>invalid!</bold></gradient>"
+  usage: "%prefix% Usage: /code <gradient:#ff80f6:#ffcc70><bold>(code)</bold></gradient>"
+  cooldown:
+    time:
+    message: "%prefix% You have to wait! <gradient:#ff80f6:#ffcc70><bold>(%value%s)</bold></gradient>"
+
 # Discord command
 
 discord:

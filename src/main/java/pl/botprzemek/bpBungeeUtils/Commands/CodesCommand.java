@@ -1,11 +1,13 @@
 package pl.botprzemek.bpBungeeUtils.Commands;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import pl.botprzemek.bpBungeeUtils.Codes.CodesManager;
 import pl.botprzemek.bpBungeeUtils.UtilsManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class CodesCommand extends Command {
@@ -23,33 +25,33 @@ public class CodesCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
 
-        if (!(sender instanceof ProxiedPlayer player)) return;
-
         String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-        String prefix = "test_";
+        String prefix = (args.length > 0) ? args[0] : "code_";
 
-        for (int i = 0; i < 5; i++) {
+        int amount = (args.length > 1) ? Integer.parseInt(args[1]) : 1;
+
+        List<String> codes = new ArrayList<>();
+
+        for (int i = 0; i < amount; i++) {
 
             Random rand = new Random();
 
             StringBuilder sb = new StringBuilder();
 
-            for (int j = 0; j < 6; j++) {
-
-                sb.append(characters.charAt(rand.nextInt(characters.length())));
-
-            }
+            for (int j = 0; j < 8; j++) sb.append(characters.charAt(rand.nextInt(characters.length())));
 
             String randomString = sb.toString();
 
             String code = prefix + randomString;
 
-            codesManager.addCode(code);
+            ProxyServer.getInstance().getLogger().info("[CODES] " + code);
 
-            player.sendMessage(code);
+            codes.add(code);
 
         }
+
+        codesManager.addCodes(codes);
 
     }
 }
