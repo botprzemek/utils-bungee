@@ -3,18 +3,18 @@ package pl.botprzemek.bpBungeeUtils.Commands;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import pl.botprzemek.bpBungeeUtils.Config.Config;
-import pl.botprzemek.bpBungeeUtils.UtilsManager;
+import pl.botprzemek.bpBungeeUtils.BungeeUtils.Utils.Serializer;
+import pl.botprzemek.bpBungeeUtils.BungeeUtils.UtilsManager;
 
 public class DiscordCommand extends Command {
 
-    private final Config config;
+    private final Serializer serializer;
 
     public DiscordCommand(UtilsManager utilsManager) {
 
-        super("discord");
+        super("discord", "bputils.discord", "dc");
 
-        this.config = utilsManager.getConfig();
+        serializer = utilsManager.getConfigManager().getConfig().getSerializer();
 
     }
 
@@ -23,7 +23,7 @@ public class DiscordCommand extends Command {
 
         if (!(sender instanceof ProxiedPlayer player)) return;
 
-        player.sendMessage(config.getStringSerializer().serializeStringFromPath("discord.success"));
+        serializer.sendCommandMessage(player, "discord.success");
 
     }
 }

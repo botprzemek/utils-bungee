@@ -1,6 +1,7 @@
 package pl.botprzemek.bpBungeeUtils;
 
 import net.md_5.bungee.api.plugin.Plugin;
+import pl.botprzemek.bpBungeeUtils.BungeeUtils.UtilsManager;
 
 public class BpBungeeUtils extends Plugin {
 
@@ -16,7 +17,7 @@ public class BpBungeeUtils extends Plugin {
     @Override
     public void onDisable() {
 
-        utilsManager.cleanUp();
+        if (utilsManager != null) utilsManager.cleanUp();
 
     }
 }

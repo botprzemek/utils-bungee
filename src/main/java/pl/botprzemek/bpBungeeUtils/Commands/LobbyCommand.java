@@ -4,8 +4,9 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import pl.botprzemek.bpBungeeUtils.Config.Config;
-import pl.botprzemek.bpBungeeUtils.UtilsManager;
+import pl.botprzemek.bpBungeeUtils.BungeeUtils.Utils.Config;
+import pl.botprzemek.bpBungeeUtils.BungeeUtils.Utils.Serializer;
+import pl.botprzemek.bpBungeeUtils.BungeeUtils.UtilsManager;
 
 import java.util.List;
 
@@ -13,11 +14,15 @@ public class LobbyCommand extends Command {
 
     private final Config config;
 
+    private final Serializer serializer;
+
     public LobbyCommand(UtilsManager utilsManager) {
 
-        super("lobby");
+        super("lobby", "bputils.lobby", "l", "hub");
 
-        this.config = utilsManager.getConfig();
+        config = utilsManager.getConfigManager().getConfig();
+
+        serializer = config.getSerializer();
 
     }
 
@@ -26,20 +31,22 @@ public class LobbyCommand extends Command {
 
         if (!(sender instanceof ProxiedPlayer player)) return;
 
-        List<String> servers = config.getConfiguration().getStringList("servers");
+        List<String> servers = config.getServerList();
 
         if (player.getServer().getInfo().getName().startsWith("lobby")) {
 
-            player.sendMessage(config.getStringSerializer().serializeStringFromPath("lobby.connected"));
+            serializer.sendCommandMessage(player, "lobby.connected");
 
             return;
 
         }
 
+        serializer.sendCommandMessage(player, "lobby.success");
+
         if (((int) Math.abs(System.currentTimeMillis() % 10)) % 2 == 0) player.connect(ProxyServer.getInstance().getServerInfo(servers.get(0)));
+
         else player.connect(ProxyServer.getInstance().getServerInfo(servers.get(1)));
 
-        player.sendMessage(config.getStringSerializer().serializeStringFromPath("lobby.success"));
-
     }
+
 }

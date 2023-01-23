@@ -1,15 +1,12 @@
-package pl.botprzemek.bpBungeeUtils.Config;
+package pl.botprzemek.bpBungeeUtils.BungeeUtils;
 
 import net.md_5.bungee.api.ProxyServer;
-import pl.botprzemek.bpBungeeUtils.BpBungeeUtils;
-import pl.botprzemek.bpBungeeUtils.UtilsManager;
+import pl.botprzemek.bpBungeeUtils.BungeeUtils.Utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigManager {
-
-    private final BpBungeeUtils instance;
 
     private final List<Config> configs = new ArrayList<>();
 
@@ -17,9 +14,7 @@ public class ConfigManager {
 
     public ConfigManager(UtilsManager utilsManager) {
 
-        this.instance = utilsManager.getInstance();
-
-        configs.add(this.config = new Config(instance, "config.yml"));
+        configs.add(this.config = new Config(utilsManager.getInstance(), "config.yml"));
 
     }
 
