@@ -1,5 +1,6 @@
 package pl.botprzemek.bpBungeeUtils.Events;
 
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
@@ -16,8 +17,6 @@ import java.util.UUID;
 
 public class JoinQuitEvent implements Listener {
 
-    private final BpBungeeUtils instance;
-
     private final Config config;
 
     private final DiscordWebhook discordWebhook;
@@ -26,34 +25,26 @@ public class JoinQuitEvent implements Listener {
 
     public JoinQuitEvent(UtilsManager utilsManager) {
 
+        this.discordWebhook = utilsManager.getDiscordWebhook();
+
         this.config = utilsManager.getConfig();
 
         this.connectedPlayers = new ArrayList<>();
-
-        this.discordWebhook = utilsManager.getDiscordWebhook();
-
-        this.instance = utilsManager.getInstance();
 
     }
 
     @EventHandler
     public void onPlayerJoinEvent(ServerSwitchEvent event) {
 
-        if (event.getPlayer().getServer().getInfo().getName().startsWith("lobby")) {
-
-            connectedPlayers.remove(event.getPlayer().getUniqueId());
-
-            return;
-
-        }
-
         ProxiedPlayer player = event.getPlayer();
+
+        if (player.getServer().getInfo().getName().startsWith("lobby")) return;
 
         connectedPlayers.add(player.getUniqueId());
 
-        discordWebhook.addEmbed(discordWebhook.createEmbedMessage("quit", -1, player, config, instance));
+        discordWebhook.sendEmbeds(discordWebhook.createEmbed(config, player, "join", ProxyServer.getInstance().getOnlineCount()));
 
-        discordWebhook.sendEmbeds(instance);
+        discordWebhook.setStatus(ProxyServer.getInstance().getOnlineCount() + " gracz/y");
 
     }
 
@@ -64,12 +55,11 @@ public class JoinQuitEvent implements Listener {
 
         if (!connectedPlayers.contains(player.getUniqueId())) return;
 
-        discordWebhook.addEmbed(discordWebhook.createEmbedMessage("quit", -1, player, config, instance));
+        connectedPlayers.remove(player.getUniqueId());
 
-        discordWebhook.sendEmbeds(instance);
+        discordWebhook.sendEmbeds(discordWebhook.createEmbed(config, player, "quit", ProxyServer.getInstance().getOnlineCount() - 1));
 
-        connectedPlayers.remove(event.getPlayer().getUniqueId());
+        discordWebhook.setStatus(ProxyServer.getInstance().getOnlineCount() - 1 + " gracz/y");
 
     }
-
 }

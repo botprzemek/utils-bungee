@@ -30,11 +30,13 @@ public class UtilsManager {
 
         configManager.loadConfigs();
 
-        updateDiscordWebhook(configManager.getConfig());
+        this.discordWebhook = new DiscordWebhook(instance, configManager.getConfig());
 
-        this.mySQLDatabaseConnection = new MySQLDatabase(configManager.getConfig().getConfiguration());
-
-        this.codesManager = new CodesManager(mySQLDatabaseConnection, instance);
+        this.mySQLDatabaseConnection = null;
+//        this.mySQLDatabaseConnection = new MySQLDatabase(configManager.getConfig().getConfiguration());
+//
+//        this.codesManager = new CodesManager(mySQLDatabaseConnection, instance);
+        this.codesManager = null;
 
         BungeeAudiences.create(instance);
 
@@ -48,7 +50,9 @@ public class UtilsManager {
 
     public void cleanUp() {
 
-        mySQLDatabaseConnection.disconnectDatabase();
+        //mySQLDatabaseConnection.disconnectDatabase();
+
+        discordWebhook.disconnect();
 
     }
 
@@ -66,7 +70,9 @@ public class UtilsManager {
 
     public void updateDiscordWebhook(Config config) {
 
-        this.discordWebhook = new DiscordWebhook(config.getConfiguration().getString("discord.webhook-url"));
+        if (discordWebhook != null) discordWebhook.disconnect();
+
+        discordWebhook = new DiscordWebhook(instance, config);
 
     }
 
@@ -81,5 +87,4 @@ public class UtilsManager {
         return codesManager;
 
     }
-
 }

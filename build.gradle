@@ -15,6 +15,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     compileOnly 'net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT'
+    implementation 'net.dv8tion:JDA:5.0.0-beta.2'
     implementation 'com.mysql:mysql-connector-j:8.0.31'
     implementation 'com.zaxxer:HikariCP:5.0.1'
     implementation 'net.kyori:adventure-platform-bungeecord:4.2.0'
@@ -27,6 +28,7 @@ jar {
 }
 
 shadowJar {
+    relocate 'net.dv8tion:JDA:5.0.0', 'pl.botprzemek.bungee.discord'
     relocate 'com.mysql:mysql-connector-j:8.0.31', 'pl.botprzemek.bungee.mysql'
     relocate 'com.zaxxer:HikariCP:5.0.1', 'pl.botprzemek.bungee.hikaricp'
     relocate 'net.kyori:adventure-platform-bungeecord:4.2.0', 'pl.botprzemek.bungee.adventure.bungee'

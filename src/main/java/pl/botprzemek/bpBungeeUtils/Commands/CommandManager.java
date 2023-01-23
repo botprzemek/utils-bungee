@@ -16,9 +16,9 @@ public class CommandManager {
 
         ProxyServer.getInstance().getPluginManager().registerCommand(instance, new DiscordCommand(utilsManager));
 
-        ProxyServer.getInstance().getPluginManager().registerCommand(instance, new CodesCommand(utilsManager));
+        //ProxyServer.getInstance().getPluginManager().registerCommand(instance, new CodesCommand(utilsManager));
 
-        ProxyServer.getInstance().getPluginManager().registerCommand(instance, new CodeCommand(utilsManager));
+        //ProxyServer.getInstance().getPluginManager().registerCommand(instance, new CodeCommand(utilsManager));
 
     }
 

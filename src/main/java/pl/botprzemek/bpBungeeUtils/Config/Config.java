@@ -51,6 +51,24 @@ public class Config {
 
     }
 
+    public String getString(String path) {
+
+        return configuration.getString(path);
+
+    }
+
+    public int getInt(String path) {
+
+        return configuration.getInt(path);
+
+    }
+
+    public Configuration getSection(String path) {
+
+        return configuration.getSection(path);
+
+    }
+
     public StringSerializer getStringSerializer() {
 
         return stringSerializer;

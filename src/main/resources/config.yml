@@ -30,6 +30,7 @@ codes:
 
 discord:
   webhook-url: "https://discord.com/api/..."
+  status: "Welcome!"
   success: "%prefix% Join our <gradient:#ff80f6:#ffcc70><bold><hover:show_text:'Join us!'><click:open_url:'https://dc.bhive.pl/'>discord!</click></hover></bold></gradient>"
   color: "#ff80f6"
   join:
